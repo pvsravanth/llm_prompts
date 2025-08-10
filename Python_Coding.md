@@ -309,6 +309,9 @@ Recommend best fit given [dataset size, latency needs, compute availability].
 ```
 
 ---
+
+
+### Better Code
 I am providing you with a Python code snippet that I want you to improve.
 
 Goals:
