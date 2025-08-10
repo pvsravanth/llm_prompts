@@ -33,6 +33,35 @@ Task:
 
 ---
 
+
+
+### Better Code
+I am providing you with a Python code snippet that I want you to improve.
+
+Goals:
+1. Optimize performance (time and space complexity where possible).
+2. Refactor for cleaner, modular, and maintainable code.
+3. Use Pythonic best practices and follow PEP 8.
+4. Add descriptive docstrings for all classes, methods, and functions using Google-style or NumPy-style format.
+5. Add inline comments explaining important logic.
+6. Use type hints for all parameters and return values.
+7. Replace repetitive logic with reusable functions/methods.
+8. Use object-oriented design with classes if it improves structure.
+9. Ensure the code is production-ready and easy to extend.
+10. Avoid unnecessary global variables and magic numbers (use constants).
+11. If applicable, handle errors gracefully with exceptions.
+12. Include one example usage section (if relevant) at the bottom.
+
+Input Code:
+[PASTE YOUR CODE HERE]
+
+Output:
+- The improved and optimized code.
+- A brief explanation of the key improvements made.
+
+
+---
+
 ### **Complete Missing Code**
 
 **Goal:** Fill in gaps without breaking style or functionality.
@@ -310,30 +339,6 @@ Recommend best fit given [dataset size, latency needs, compute availability].
 
 ---
 
-
-### Better Code
-I am providing you with a Python code snippet that I want you to improve.
-
-Goals:
-1. Optimize performance (time and space complexity where possible).
-2. Refactor for cleaner, modular, and maintainable code.
-3. Use Pythonic best practices and follow PEP 8.
-4. Add descriptive docstrings for all classes, methods, and functions using Google-style or NumPy-style format.
-5. Add inline comments explaining important logic.
-6. Use type hints for all parameters and return values.
-7. Replace repetitive logic with reusable functions/methods.
-8. Use object-oriented design with classes if it improves structure.
-9. Ensure the code is production-ready and easy to extend.
-10. Avoid unnecessary global variables and magic numbers (use constants).
-11. If applicable, handle errors gracefully with exceptions.
-12. Include one example usage section (if relevant) at the bottom.
-
-Input Code:
-[PASTE YOUR CODE HERE]
-
-Output:
-- The improved and optimized code.
-- A brief explanation of the key improvements made.
 
 
 
