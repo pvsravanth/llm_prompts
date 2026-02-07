@@ -1,0 +1,118 @@
+---
+name: seo-content-brief-generator
+description: Create an SEO-ready content brief with intent mapping, structure, and internal linking plan.
+version: 1.0.0
+authors:
+  - sravanth
+tags:
+  - seo
+  - content
+  - brief
+  - marketing
+model:
+  api: chat
+  configuration:
+    type: openai
+    api_key: ${env:OPENAI_API_KEY}
+    model: ${env:OPENAI_MODEL_CHAT:gpt-4o-mini}
+  parameters:
+    temperature: 0.3
+    top_p: 0.95
+    max_tokens: 1400
+inputs:
+  topic:
+    type: string
+    description: Core topic to target.
+  audience:
+    type: string
+    description: Target persona.
+  funnel_stage:
+    type: string
+    enum:
+      - TOFU
+      - MOFU
+      - BOFU
+    default: TOFU
+  primary_keyword:
+    type: string
+    description: Main keyword for the article.
+  secondary_keywords:
+    type: string
+    description: Comma-separated secondary keywords.
+  competitors_summary:
+    type: string
+    description: Optional summary of top competitor pages.
+    default: ""
+outputs:
+  type: object
+  schema:
+    type: object
+    properties:
+      title_options:
+        type: array
+        items:
+          type: string
+      meta_description:
+        type: string
+      search_intent:
+        type: string
+      outline:
+        type: array
+        items:
+          type: object
+          properties:
+            heading:
+              type: string
+            level:
+              type: string
+            key_points:
+              type: array
+              items:
+                type: string
+          required:
+            - heading
+            - level
+      internal_link_targets:
+        type: array
+        items:
+          type: string
+      cta:
+        type: string
+      differentiation_ideas:
+        type: array
+        items:
+          type: string
+    required:
+      - title_options
+      - meta_description
+      - search_intent
+      - outline
+      - internal_link_targets
+      - cta
+sample:
+  topic: fastapi middleware best practices
+  audience: backend engineers at startups
+  funnel_stage: MOFU
+  primary_keyword: fastapi middleware
+  secondary_keywords: request id, logging middleware, cors setup
+  competitors_summary: Most articles cover only CORS and miss observability patterns.
+---
+
+system:
+You are an SEO strategist and technical editor.
+Create practical content briefs with specific structure and clear differentiation.
+Output valid JSON only matching the declared schema.
+
+user:
+Build a content brief using:
+- topic: {{topic}}
+- audience: {{audience}}
+- funnel_stage: {{funnel_stage}}
+- primary_keyword: {{primary_keyword}}
+- secondary_keywords: {{secondary_keywords}}
+- competitors_summary: {{competitors_summary}}
+
+Requirements:
+- Include primary keyword naturally in at least one title option.
+- Keep meta_description at 155 characters or fewer.
+- Keep outline actionable, not generic.

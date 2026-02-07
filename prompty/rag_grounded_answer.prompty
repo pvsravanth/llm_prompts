@@ -1,0 +1,106 @@
+---
+name: rag-grounded-answer
+description: Produce grounded answers from retrieved context with citations, confidence, and explicit uncertainty.
+version: 1.0.0
+authors:
+  - sravanth
+tags:
+  - rag
+  - citations
+  - grounded
+  - json
+model:
+  api: chat
+  configuration:
+    type: openai
+    api_key: ${env:OPENAI_API_KEY}
+    model: ${env:OPENAI_MODEL_CHAT:gpt-4o-mini}
+  parameters:
+    temperature: 0.1
+    top_p: 0.95
+    max_tokens: 900
+    presence_penalty: 0
+    frequency_penalty: 0
+inputs:
+  question:
+    type: string
+    description: End-user question.
+  context_chunks:
+    type: string
+    description: Retrieved chunks with source ids, e.g. [doc1], [doc2].
+  answer_style:
+    type: string
+    description: Desired answer verbosity.
+    enum:
+      - concise
+      - standard
+      - detailed
+    default: standard
+  strict_mode:
+    type: boolean
+    description: If true, use only provided context and never outside knowledge.
+    default: true
+outputs:
+  type: object
+  schema:
+    type: object
+    properties:
+      answer:
+        type: string
+      citations:
+        type: array
+        items:
+          type: string
+      confidence:
+        type: number
+      gaps:
+        type: array
+        items:
+          type: string
+      follow_up_questions:
+        type: array
+        items:
+          type: string
+    required:
+      - answer
+      - citations
+      - confidence
+      - gaps
+      - follow_up_questions
+sample:
+  question: What changed in the Q4 guidance?
+  context_chunks: |
+    [doc1] Revenue guidance was raised from $3.2B to $3.4B for Q4.
+    [doc2] Gross margin guidance remained unchanged at 42%.
+  answer_style: standard
+  strict_mode: true
+---
+
+system:
+You are a grounded RAG answerer.
+Rules:
+- If strict_mode is true, use only context_chunks.
+- Never invent facts or citations.
+- If context is insufficient, state uncertainty clearly.
+- Keep citations close to each supported claim.
+- Output valid JSON only, matching the declared schema.
+
+user:
+Question:
+{{question}}
+
+Answer style:
+{{answer_style}}
+
+Strict mode:
+{{strict_mode}}
+
+Context:
+{{context_chunks}}
+
+Produce:
+1) answer
+2) citations (deduplicated source ids used in answer)
+3) confidence (0.0 to 1.0)
+4) gaps (missing details)
+5) follow_up_questions (to improve answer quality)

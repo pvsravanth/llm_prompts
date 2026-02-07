@@ -1,0 +1,119 @@
+---
+name: code-review-guardrails
+description: Review code with severity-ranked findings, repro hints, and focused remediation steps.
+version: 1.0.0
+authors:
+  - sravanth
+tags:
+  - code-review
+  - security
+  - reliability
+  - testing
+model:
+  api: chat
+  configuration:
+    type: openai
+    api_key: ${env:OPENAI_API_KEY}
+    model: ${env:OPENAI_MODEL_CHAT:gpt-4o-mini}
+  parameters:
+    temperature: 0.05
+    max_tokens: 1200
+    top_p: 1
+inputs:
+  language:
+    type: string
+    description: Primary language of the code.
+    default: python
+  changed_files:
+    type: string
+    description: Unified diff or file snippets with paths and line context.
+  review_focus:
+    type: string
+    description: Comma-separated areas, e.g. security, performance, correctness.
+    default: correctness,security,tests
+  risk_tolerance:
+    type: string
+    enum:
+      - strict
+      - balanced
+      - relaxed
+    default: strict
+outputs:
+  type: object
+  schema:
+    type: object
+    properties:
+      findings:
+        type: array
+        items:
+          type: object
+          properties:
+            severity:
+              type: string
+            file:
+              type: string
+            line:
+              type: integer
+            title:
+              type: string
+            impact:
+              type: string
+            evidence:
+              type: string
+            fix:
+              type: string
+            test_to_add:
+              type: string
+          required:
+            - severity
+            - file
+            - line
+            - title
+            - impact
+            - evidence
+            - fix
+      summary:
+        type: string
+      residual_risks:
+        type: array
+        items:
+          type: string
+    required:
+      - findings
+      - summary
+      - residual_risks
+sample:
+  language: python
+  changed_files: |
+    diff --git a/app/main.py b/app/main.py
+    + token = request.args["token"]
+    + run_query(f"SELECT * FROM users WHERE token = '{token}'")
+  review_focus: correctness,security,tests
+  risk_tolerance: strict
+---
+
+system:
+You are a senior reviewer.
+Prioritize bugs, security vulnerabilities, regressions, and missing tests.
+Do not praise. Be precise and actionable.
+Output valid JSON only matching the declared schema.
+
+user:
+Review this code change.
+
+Language:
+{{language}}
+
+Focus:
+{{review_focus}}
+
+Risk tolerance:
+{{risk_tolerance}}
+
+Changed files / diff:
+{{changed_files}}
+
+Instructions:
+- Order findings by severity: critical, high, medium, low.
+- Include file and line when available.
+- If no findings, return findings as empty array and explain residual risks.

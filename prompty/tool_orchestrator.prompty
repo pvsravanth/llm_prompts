@@ -1,0 +1,118 @@
+---
+name: tool-orchestrator-planner
+description: Plan and synthesize multi-tool workflows with dependency-aware execution and fallback handling.
+version: 1.0.0
+authors:
+  - sravanth
+tags:
+  - agent
+  - tools
+  - planning
+  - orchestration
+model:
+  api: chat
+  configuration:
+    type: openai
+    api_key: ${env:OPENAI_API_KEY}
+    model: ${env:OPENAI_MODEL_CHAT:gpt-4o-mini}
+  parameters:
+    temperature: 0.15
+    top_p: 1
+    max_tokens: 1300
+inputs:
+  user_goal:
+    type: string
+    description: High-level objective.
+  available_tools:
+    type: string
+    description: Tool list with capability summaries.
+  constraints:
+    type: string
+    description: Time, budget, policy, and reliability constraints.
+    default: ""
+  allow_parallel:
+    type: boolean
+    description: Whether independent steps can run in parallel.
+    default: true
+outputs:
+  type: object
+  schema:
+    type: object
+    properties:
+      execution_plan:
+        type: array
+        items:
+          type: object
+          properties:
+            step_id:
+              type: string
+            objective:
+              type: string
+            tool:
+              type: string
+            depends_on:
+              type: array
+              items:
+                type: string
+            success_check:
+              type: string
+            fallback:
+              type: string
+          required:
+            - step_id
+            - objective
+            - tool
+            - depends_on
+            - success_check
+      parallel_groups:
+        type: array
+        items:
+          type: array
+          items:
+            type: string
+      final_answer_contract:
+        type: string
+      risks:
+        type: array
+        items:
+          type: string
+    required:
+      - execution_plan
+      - parallel_groups
+      - final_answer_contract
+      - risks
+sample:
+  user_goal: Compare two vendors and recommend one for a 12-month contract.
+  available_tools: |
+    finance_api: price and fundamentals
+    web_search: news and filings
+    doc_fetch: contracts and policy docs
+  constraints: Must finish under 60 seconds and include sources.
+  allow_parallel: true
+---
+
+system:
+You are a tool orchestration planner.
+Build minimal, dependency-correct plans.
+Prefer parallel execution for independent steps.
+Output valid JSON only matching the declared schema.
+
+user:
+Create an orchestration plan for:
+
+Goal:
+{{user_goal}}
+
+Tools:
+{{available_tools}}
+
+Constraints:
+{{constraints}}
+
+Parallel execution allowed:
+{{allow_parallel}}
+
+Instructions:
+- Do not include tools that add no value.
+- Add one fallback per step.
+- Define a final answer contract describing structure, evidence, and uncertainty handling.

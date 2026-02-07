@@ -19,6 +19,13 @@ A repo of useful prompts:
 - Meeting and productivity prompts: action extraction, decision logs, follow-up drafts (`Meeting_Productivity.md`)
 - Agent workflow prompts: planner-executor-critic loops and blocked-state escalation (`Agent_Workflows.md`)
 
+Prompty templates (`.prompty`):
+
+- Grounded RAG answer template with strict JSON output contract (`prompty/rag_grounded_answer.prompty`)
+- Code review template with severity-ranked findings and remediation (`prompty/code_review_guardrails.prompty`)
+- SEO content brief template with typed inputs and structured outline output (`prompty/seo_content_brief.prompty`)
+- Tool orchestration planner with dependency and fallback modeling (`prompty/tool_orchestrator.prompty`)
+
 ## Starter Map
 
 Start here based on your task:
@@ -27,6 +34,7 @@ Start here based on your task:
 - Building a production FastAPI starter: `FastAPI_Prompt.md`
 - Debugging failures and shipping safer fixes: `Debugging_Prompts.md`
 - Designing/evaluating prompts before production: `Prompt_Evaluation.md`
+- Running ready-to-use `.prompty` templates: `prompty/*.prompty`
 - Enforcing JSON/schema-safe outputs: `Structured_Output.md`
 - Building tool-using agents: `Tool_Calling.md`
 - Running complex tasks with execution loops: `Agent_Workflows.md`
